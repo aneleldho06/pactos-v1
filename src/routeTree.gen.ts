@@ -15,6 +15,7 @@ import { Route as AppTemplatesRouteImport } from './routes/_app.templates'
 import { Route as AppDashboardRouteImport } from './routes/_app.dashboard'
 import { Route as AppBuilderRouteImport } from './routes/_app.builder'
 import { Route as AppAgreementsRouteImport } from './routes/_app.agreements'
+import { Route as AppActivityRouteImport } from './routes/_app.activity'
 import { Route as AppAgreementsIdRouteImport } from './routes/_app.agreements.$id'
 
 const AppRoute = AppRouteImport.update({
@@ -46,6 +47,11 @@ const AppAgreementsRoute = AppAgreementsRouteImport.update({
   path: '/agreements',
   getParentRoute: () => AppRoute,
 } as any)
+const AppActivityRoute = AppActivityRouteImport.update({
+  id: '/activity',
+  path: '/activity',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppAgreementsIdRoute = AppAgreementsIdRouteImport.update({
   id: '/$id',
   path: '/$id',
@@ -54,6 +60,7 @@ const AppAgreementsIdRoute = AppAgreementsIdRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/activity': typeof AppActivityRoute
   '/agreements': typeof AppAgreementsRouteWithChildren
   '/builder': typeof AppBuilderRoute
   '/dashboard': typeof AppDashboardRoute
@@ -62,6 +69,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/activity': typeof AppActivityRoute
   '/agreements': typeof AppAgreementsRouteWithChildren
   '/builder': typeof AppBuilderRoute
   '/dashboard': typeof AppDashboardRoute
@@ -72,6 +80,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/_app': typeof AppRouteWithChildren
+  '/_app/activity': typeof AppActivityRoute
   '/_app/agreements': typeof AppAgreementsRouteWithChildren
   '/_app/builder': typeof AppBuilderRoute
   '/_app/dashboard': typeof AppDashboardRoute
@@ -82,6 +91,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/activity'
     | '/agreements'
     | '/builder'
     | '/dashboard'
@@ -90,6 +100,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/activity'
     | '/agreements'
     | '/builder'
     | '/dashboard'
@@ -99,6 +110,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/_app'
+    | '/_app/activity'
     | '/_app/agreements'
     | '/_app/builder'
     | '/_app/dashboard'
@@ -155,6 +167,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppAgreementsRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/activity': {
+      id: '/_app/activity'
+      path: '/activity'
+      fullPath: '/activity'
+      preLoaderRoute: typeof AppActivityRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/agreements/$id': {
       id: '/_app/agreements/$id'
       path: '/$id'
@@ -178,6 +197,7 @@ const AppAgreementsRouteWithChildren = AppAgreementsRoute._addFileChildren(
 )
 
 interface AppRouteChildren {
+  AppActivityRoute: typeof AppActivityRoute
   AppAgreementsRoute: typeof AppAgreementsRouteWithChildren
   AppBuilderRoute: typeof AppBuilderRoute
   AppDashboardRoute: typeof AppDashboardRoute
@@ -185,6 +205,7 @@ interface AppRouteChildren {
 }
 
 const AppRouteChildren: AppRouteChildren = {
+  AppActivityRoute: AppActivityRoute,
   AppAgreementsRoute: AppAgreementsRouteWithChildren,
   AppBuilderRoute: AppBuilderRoute,
   AppDashboardRoute: AppDashboardRoute,
