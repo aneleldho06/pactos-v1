@@ -21,7 +21,7 @@ function BuilderPage() {
 
   const onAdd = (type: BlockType) => {
     const meta = BLOCK_META[type];
-    addBlock({ id: `${type}-${Date.now()}`, type, title: meta.defaultTitle ?? meta.label, subtitle: meta.description });
+    addBlock({ id: `${type}-${Date.now()}`, type, title: meta.label, subtitle: meta.description });
   };
 
   return (
