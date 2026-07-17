@@ -14,7 +14,7 @@ export function Logo({ className, showWordmark = true }: { className?: string; s
       </div>
       {showWordmark && (
         <span className="text-[15px] font-semibold tracking-tight text-foreground">
-          FlowLedger
+          PactOs
         </span>
       )}
     </div>
