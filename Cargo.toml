@@ -1,0 +1,26 @@
+[workspace]
+resolver = "2"
+members = [
+  "contracts/pactos-shared",
+  "contracts/agreement-registry",
+  "contracts/permission-module",
+  "contracts/distribution-module",
+  "contracts/escrow-module",
+  "contracts/treasury-module",
+  "contracts/audit-module",
+  "contracts/agreement-runtime",
+]
+
+[workspace.dependencies]
+soroban-sdk = "26.0.0"
+pactos-shared = { path = "contracts/pactos-shared" }
+
+[profile.release]
+opt-level = "z"
+overflow-checks = true
+debug = 0
+strip = "symbols"
+debug-assertions = false
+panic = "abort"
+codegen-units = 1
+lto = true

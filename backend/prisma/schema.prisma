@@ -1,0 +1,287 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum AgreementStatus {
+  DRAFT
+  DEPLOYED
+  FUNDED
+  ACTIVE
+  EXECUTING
+  PAUSED
+  COMPLETED
+  CANCELLED
+  ARCHIVED
+}
+
+enum ExecutionStatus {
+  DETECTED
+  PLANNED
+  AWAITING_SIGNATURE
+  SUBMITTED
+  CONFIRMED
+  RETRYABLE
+  FAILED
+  IGNORED
+  EXPIRED
+}
+
+enum NotificationStatus {
+  PENDING
+  DELIVERED
+  FAILED
+}
+
+enum TemplateStatus {
+  DRAFT
+  PUBLISHED
+  DEPRECATED
+}
+
+enum WalletStatus {
+  LINKED
+  VERIFIED
+  REVOKED
+}
+
+model User {
+  id            String         @id @default(cuid())
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  wallets       Wallet[]
+  agreements    Agreement[]
+  sessions      Session[]
+  notifications Notification[]
+  auditLogs     AuditLog[]
+}
+
+model Wallet {
+  id         String       @id @default(cuid())
+  userId     String
+  address    String       @unique
+  network    String
+  status     WalletStatus @default(LINKED)
+  verifiedAt DateTime?
+  createdAt  DateTime     @default(now())
+  user       User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, network])
+}
+
+model AuthChallenge {
+  id            String    @id @default(cuid())
+  walletAddress String
+  nonce         String    @unique
+  domain        String
+  network       String
+  expiresAt     DateTime
+  consumedAt    DateTime?
+  createdAt     DateTime  @default(now())
+
+  @@index([walletAddress, expiresAt])
+}
+
+model Session {
+  id               String    @id @default(cuid())
+  userId           String
+  refreshTokenHash String    @unique
+  expiresAt        DateTime
+  revokedAt        DateTime?
+  createdAt        DateTime  @default(now())
+  user             User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, expiresAt])
+}
+
+model Agreement {
+  id               String             @id @default(cuid())
+  chainAgreementId String             @unique
+  creatorId        String
+  contractId       String
+  status           AgreementStatus    @default(DRAFT)
+  assetAddress     String
+  metadataHash     String
+  ruleHash         String
+  version          Int                @default(1)
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @updatedAt
+  creator          User               @relation(fields: [creatorId], references: [id])
+  participants     Participant[]
+  versions         AgreementVersion[]
+  executions       Execution[]
+  events           ContractEvent[]
+
+  @@index([creatorId, status, createdAt])
+  @@index([status, updatedAt])
+}
+
+model Participant {
+  id            String    @id @default(cuid())
+  agreementId   String
+  walletAddress String
+  role          String
+  shareBps      Int?
+  createdAt     DateTime  @default(now())
+  agreement     Agreement @relation(fields: [agreementId], references: [id], onDelete: Cascade)
+
+  @@unique([agreementId, walletAddress, role])
+}
+
+model AgreementVersion {
+  id              String    @id @default(cuid())
+  agreementId     String
+  version         Int
+  compilerVersion String
+  adl             Json
+  contentHash     String
+  manifest        Json
+  createdAt       DateTime  @default(now())
+  agreement       Agreement @relation(fields: [agreementId], references: [id], onDelete: Cascade)
+
+  @@unique([agreementId, version])
+  @@index([contentHash])
+}
+
+model Execution {
+  id             String             @id @default(cuid())
+  agreementId    String
+  triggerKey     String             @unique
+  status         ExecutionStatus    @default(DETECTED)
+  planHash       String?
+  idempotencyKey String             @unique
+  attempts       Int                @default(0)
+  nextAttemptAt  DateTime?
+  leaseUntil     DateTime?
+  ledgerSequence BigInt?
+  createdAt      DateTime           @default(now())
+  updatedAt      DateTime           @updatedAt
+  agreement      Agreement          @relation(fields: [agreementId], references: [id], onDelete: Cascade)
+  transactions   ChainTransaction[]
+
+  @@index([status, nextAttemptAt])
+  @@index([agreementId, createdAt])
+}
+
+model ChainTransaction {
+  id             String     @id @default(cuid())
+  executionId    String?
+  hash           String     @unique
+  status         String
+  ledgerSequence BigInt?
+  submittedAt    DateTime   @default(now())
+  confirmedAt    DateTime?
+  raw            Json
+  execution      Execution? @relation(fields: [executionId], references: [id], onDelete: SetNull)
+
+  @@index([ledgerSequence])
+}
+
+model ContractEvent {
+  id              String     @id @default(cuid())
+  transactionHash String
+  ledgerSequence  BigInt
+  contractId      String
+  eventIndex      Int
+  topic           String
+  payload         Json
+  observedAt      DateTime   @default(now())
+  agreementId     String?
+  agreement       Agreement? @relation(fields: [agreementId], references: [id], onDelete: SetNull)
+
+  @@unique([transactionHash, eventIndex])
+  @@index([contractId, ledgerSequence])
+  @@index([agreementId, observedAt])
+}
+
+model ListenerCheckpoint {
+  id             String   @id @default(cuid())
+  stream         String   @unique
+  cursor         String?
+  ledgerSequence BigInt?
+  updatedAt      DateTime @updatedAt
+}
+
+model InboxReceipt {
+  id          String   @id @default(cuid())
+  consumer    String
+  messageId   String
+  processedAt DateTime @default(now())
+
+  @@unique([consumer, messageId])
+}
+
+model OutboxEvent {
+  id          String    @id @default(cuid())
+  type        String
+  aggregateId String
+  payload     Json
+  occurredAt  DateTime  @default(now())
+  publishedAt DateTime?
+  attempts    Int       @default(0)
+
+  @@index([publishedAt, occurredAt])
+}
+
+model Template {
+  id          String         @id @default(cuid())
+  slug        String         @unique
+  name        String
+  description String
+  category    String
+  status      TemplateStatus @default(DRAFT)
+  adl         Json
+  schema      Json
+  version     Int            @default(1)
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+
+  @@index([status, category])
+}
+
+model Notification {
+  id        String             @id @default(cuid())
+  userId    String
+  type      String
+  title     String
+  body      String
+  readAt    DateTime?
+  status    NotificationStatus @default(PENDING)
+  payload   Json
+  createdAt DateTime           @default(now())
+  user      User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, readAt, createdAt])
+}
+
+model AuditLog {
+  id            String   @id @default(cuid())
+  userId        String?
+  action        String
+  aggregateType String
+  aggregateId   String
+  payload       Json
+  previousHash  String?
+  hash          String
+  createdAt     DateTime @default(now())
+  user          User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([aggregateType, aggregateId, createdAt])
+}
+
+model AnalyticsDaily {
+  id                String   @id @default(cuid())
+  date              DateTime @db.Date
+  agreementCount    Int      @default(0)
+  executionCount    Int      @default(0)
+  completedCount    Int      @default(0)
+  failedCount       Int      @default(0)
+  volumeBaseUnits   Decimal  @default(0)
+  treasuryBaseUnits Decimal  @default(0)
+
+  @@unique([date])
+}

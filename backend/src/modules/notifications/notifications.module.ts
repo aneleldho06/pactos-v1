@@ -1,0 +1,3 @@
+import { Controller, Get, Module, Param, Patch } from '@nestjs/common'; import { PrismaService } from '../../platform/prisma.module';
+@Controller('notifications') class NotificationsController { constructor(private readonly prisma: PrismaService) {} @Get(':userId') list(@Param('userId') userId: string) { return this.prisma.notification.findMany({ where: { userId }, orderBy: { createdAt: 'desc' }, take: 100 }); } @Patch(':id/read') read(@Param('id') id: string) { return this.prisma.notification.update({ where: { id }, data: { readAt: new Date(), status: 'DELIVERED' } }); } }
+@Module({ controllers: [NotificationsController] }) export class NotificationsModule {}
