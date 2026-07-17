@@ -77,14 +77,18 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "FlowLedger — Programmable Financial Agreements on Stellar" },
+      { title: "PactOS : The Engine of Programmable Finance on Stellar." },
       { name: "description", content: "Create financial agreements that automatically execute across borders, currencies, and recipients. Powered by Soroban." },
       { name: "author", content: "FlowLedger" },
-      { property: "og:title", content: "FlowLedger — Programmable Financial Agreements" },
-      { property: "og:description", content: "Money should come with instructions. Design, execute, and track programmable financial agreements on Stellar." },
+      { property: "og:title", content: "PactOS : The Engine of Programmable Finance on Stellar." },
+      { property: "og:description", content: "Create financial agreements that automatically execute across borders, currencies, and recipients. Powered by Soroban." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "theme-color", content: "#0EA5E9" },
+      { name: "twitter:title", content: "PactOS : The Engine of Programmable Finance on Stellar." },
+      { name: "twitter:description", content: "Create financial agreements that automatically execute across borders, currencies, and recipients. Powered by Soroban." },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/3591f605-5061-4d70-8ae8-ac825006b34b/id-preview-9a690a5b--fe454eb3-eabf-4a17-8225-2a269000558e.lovable.app-1784294404659.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/3591f605-5061-4d70-8ae8-ac825006b34b/id-preview-9a690a5b--fe454eb3-eabf-4a17-8225-2a269000558e.lovable.app-1784294404659.png" },
     ],
     links: [
       {
