@@ -51,7 +51,12 @@ function AgreementDetail() {
       <div className="mt-8 grid gap-6 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)]">
         <div className="rounded-2xl border bg-card p-6 shadow-elegant">
           <div className="text-xs uppercase tracking-wider text-muted-foreground">Flow</div>
-          <Timeline blocks={a.blocks} />
+          <Timeline items={a.blocks.map((bl, i) => ({
+            id: bl.id,
+            title: bl.title,
+            subtitle: bl.subtitle,
+            status: i < (a.blocks.length - 1) ? "done" : "current",
+          }))} />
         </div>
         <div className="space-y-6">
           <div className="rounded-2xl border bg-card p-6 shadow-elegant">
