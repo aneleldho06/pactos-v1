@@ -9,38 +9,153 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as AppRouteImport } from './routes/_app'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AppTemplatesRouteImport } from './routes/_app.templates'
+import { Route as AppSettingsRouteImport } from './routes/_app.settings'
+import { Route as AppDashboardRouteImport } from './routes/_app.dashboard'
+import { Route as AppBuilderRouteImport } from './routes/_app.builder'
+import { Route as AppAnalyticsRouteImport } from './routes/_app.analytics'
+import { Route as AppAgreementsRouteImport } from './routes/_app.agreements'
+import { Route as AppActivityRouteImport } from './routes/_app.activity'
+import { Route as AppAgreementsIdRouteImport } from './routes/_app.agreements.$id'
 
+const AppRoute = AppRouteImport.update({
+  id: '/_app',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AppTemplatesRoute = AppTemplatesRouteImport.update({
+  id: '/templates',
+  path: '/templates',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppSettingsRoute = AppSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppDashboardRoute = AppDashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppBuilderRoute = AppBuilderRouteImport.update({
+  id: '/builder',
+  path: '/builder',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppAnalyticsRoute = AppAnalyticsRouteImport.update({
+  id: '/analytics',
+  path: '/analytics',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppAgreementsRoute = AppAgreementsRouteImport.update({
+  id: '/agreements',
+  path: '/agreements',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppActivityRoute = AppActivityRouteImport.update({
+  id: '/activity',
+  path: '/activity',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppAgreementsIdRoute = AppAgreementsIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => AppAgreementsRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/activity': typeof AppActivityRoute
+  '/agreements': typeof AppAgreementsRouteWithChildren
+  '/analytics': typeof AppAnalyticsRoute
+  '/builder': typeof AppBuilderRoute
+  '/dashboard': typeof AppDashboardRoute
+  '/settings': typeof AppSettingsRoute
+  '/templates': typeof AppTemplatesRoute
+  '/agreements/$id': typeof AppAgreementsIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/activity': typeof AppActivityRoute
+  '/agreements': typeof AppAgreementsRouteWithChildren
+  '/analytics': typeof AppAnalyticsRoute
+  '/builder': typeof AppBuilderRoute
+  '/dashboard': typeof AppDashboardRoute
+  '/settings': typeof AppSettingsRoute
+  '/templates': typeof AppTemplatesRoute
+  '/agreements/$id': typeof AppAgreementsIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_app': typeof AppRouteWithChildren
+  '/_app/activity': typeof AppActivityRoute
+  '/_app/agreements': typeof AppAgreementsRouteWithChildren
+  '/_app/analytics': typeof AppAnalyticsRoute
+  '/_app/builder': typeof AppBuilderRoute
+  '/_app/dashboard': typeof AppDashboardRoute
+  '/_app/settings': typeof AppSettingsRoute
+  '/_app/templates': typeof AppTemplatesRoute
+  '/_app/agreements/$id': typeof AppAgreementsIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/activity'
+    | '/agreements'
+    | '/analytics'
+    | '/builder'
+    | '/dashboard'
+    | '/settings'
+    | '/templates'
+    | '/agreements/$id'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/activity'
+    | '/agreements'
+    | '/analytics'
+    | '/builder'
+    | '/dashboard'
+    | '/settings'
+    | '/templates'
+    | '/agreements/$id'
+  id:
+    | '__root__'
+    | '/'
+    | '/_app'
+    | '/_app/activity'
+    | '/_app/agreements'
+    | '/_app/analytics'
+    | '/_app/builder'
+    | '/_app/dashboard'
+    | '/_app/settings'
+    | '/_app/templates'
+    | '/_app/agreements/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AppRoute: typeof AppRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/_app': {
+      id: '/_app'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AppRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -48,22 +163,103 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_app/templates': {
+      id: '/_app/templates'
+      path: '/templates'
+      fullPath: '/templates'
+      preLoaderRoute: typeof AppTemplatesRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/settings': {
+      id: '/_app/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof AppSettingsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/dashboard': {
+      id: '/_app/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof AppDashboardRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/builder': {
+      id: '/_app/builder'
+      path: '/builder'
+      fullPath: '/builder'
+      preLoaderRoute: typeof AppBuilderRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/analytics': {
+      id: '/_app/analytics'
+      path: '/analytics'
+      fullPath: '/analytics'
+      preLoaderRoute: typeof AppAnalyticsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/agreements': {
+      id: '/_app/agreements'
+      path: '/agreements'
+      fullPath: '/agreements'
+      preLoaderRoute: typeof AppAgreementsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/activity': {
+      id: '/_app/activity'
+      path: '/activity'
+      fullPath: '/activity'
+      preLoaderRoute: typeof AppActivityRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/agreements/$id': {
+      id: '/_app/agreements/$id'
+      path: '/$id'
+      fullPath: '/agreements/$id'
+      preLoaderRoute: typeof AppAgreementsIdRouteImport
+      parentRoute: typeof AppAgreementsRoute
+    }
   }
 }
 
+interface AppAgreementsRouteChildren {
+  AppAgreementsIdRoute: typeof AppAgreementsIdRoute
+}
+
+const AppAgreementsRouteChildren: AppAgreementsRouteChildren = {
+  AppAgreementsIdRoute: AppAgreementsIdRoute,
+}
+
+const AppAgreementsRouteWithChildren = AppAgreementsRoute._addFileChildren(
+  AppAgreementsRouteChildren,
+)
+
+interface AppRouteChildren {
+  AppActivityRoute: typeof AppActivityRoute
+  AppAgreementsRoute: typeof AppAgreementsRouteWithChildren
+  AppAnalyticsRoute: typeof AppAnalyticsRoute
+  AppBuilderRoute: typeof AppBuilderRoute
+  AppDashboardRoute: typeof AppDashboardRoute
+  AppSettingsRoute: typeof AppSettingsRoute
+  AppTemplatesRoute: typeof AppTemplatesRoute
+}
+
+const AppRouteChildren: AppRouteChildren = {
+  AppActivityRoute: AppActivityRoute,
+  AppAgreementsRoute: AppAgreementsRouteWithChildren,
+  AppAnalyticsRoute: AppAnalyticsRoute,
+  AppBuilderRoute: AppBuilderRoute,
+  AppDashboardRoute: AppDashboardRoute,
+  AppSettingsRoute: AppSettingsRoute,
+  AppTemplatesRoute: AppTemplatesRoute,
+}
+
+const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AppRoute: AppRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
