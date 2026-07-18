@@ -16,6 +16,8 @@
 [![Status](https://img.shields.io/badge/Status-Alpha-orange?style=flat-square)](#-current-status)
 
 </div>
+<img width="1600" height="900" alt="pactos_intro" src="https://github.com/user-attachments/assets/60ad8131-61e5-4651-b356-9568e575448d" />
+
 <img width="1554" height="696" alt="yeahhhhhh 2026-07-18 at 6 22 59 PM" src="https://github.com/user-attachments/assets/eb587b31-9995-4de2-850b-9518b093628d" />
 
 
