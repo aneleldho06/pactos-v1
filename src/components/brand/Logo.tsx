@@ -3,8 +3,8 @@ import { cn } from "@/lib/utils";
 export function Logo({ className, showWordmark = true }: { className?: string; showWordmark?: boolean }) {
   return (
     <div className={cn("flex items-center gap-2", className)}>
-      <div className="relative grid h-8 w-8 shrink-0 place-items-center rounded-xl bg-foreground text-background shadow-elegant">
-        <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+      <div className="relative grid h-8 w-8 shrink-0 place-items-center rounded-xl bg-primary text-primary-foreground shadow-glow">
+        <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
           <path d="M4 7h10" />
           <path d="M4 12h16" />
           <path d="M4 17h10" />
