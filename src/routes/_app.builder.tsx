@@ -133,7 +133,7 @@ function BuilderPage() {
 
       <div className="mt-8 grid gap-6 lg:grid-cols-[280px_minmax(0,1fr)]">
         <BlockPalette onAdd={onAdd} />
-        <div className="min-h-[500px] rounded-2xl border bg-card/40 p-6 dot-grid">
+        <div className="min-h-[500px] rounded-2xl border-[3px] border-foreground bg-card/40 p-6 dot-grid">
           <div className="mx-auto flex max-w-md flex-col items-center gap-3">
             <AnimatePresence>
               {blocks.map((bl, i) => (
