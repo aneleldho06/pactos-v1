@@ -47,16 +47,16 @@ function BuilderPage() {
       toast.loading("Preparing transaction...", { id: "save-flow" });
 
       // 1. Prepare
-      const prepareRes = await api.agreements.prepare<{
-        agreementId: string;
-        chainAgreementId: string;
-        transactionXdr: string;
-      }>({
+      const prepareRes = (await api.agreements.prepare({
         name,
         description,
         blocks,
         creatorAddress: walletAddress,
-      });
+      })) as {
+        agreementId: string;
+        chainAgreementId: string;
+        transactionXdr: string;
+      };
 
       toast.loading("Simulating transaction on-chain...", { id: "save-flow" });
 
