@@ -4,6 +4,7 @@ import { ZodValidationPipe } from '../../common/zod-validation.pipe';
 import { AgreementsService } from './agreements.service';
 import { ApiTags, ApiOperation, ApiBody, ApiQuery } from '@nestjs/swagger';
 
+import { BlockchainModule } from '../blockchain/blockchain.module';
 const createSchema = z.object({
   chainAgreementId: z.string().min(1),
   creatorId: z.string().min(1),
@@ -81,7 +82,15 @@ export class AgreementsController {
   }
 }
 
+// @Module({
+//   controllers: [AgreementsController],
+//   providers: [AgreementsService],
+//   exports: [AgreementsService],
+// })
+// export class AgreementsModule {}
+
 @Module({
+  imports: [BlockchainModule],
   controllers: [AgreementsController],
   providers: [AgreementsService],
   exports: [AgreementsService],
