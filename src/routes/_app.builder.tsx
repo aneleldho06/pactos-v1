@@ -71,10 +71,11 @@ function BuilderPage() {
       // 3. Sign
       let signedXdr: string;
       try {
-        signedXdr = await signTransaction(prepareRes.transactionXdr, {
+        const signRes: any = await signTransaction(prepareRes.transactionXdr, {
           networkPassphrase: config.stellarNetworkPassphrase,
           address: walletAddress,
         });
+        signedXdr = typeof signRes === "string" ? signRes : signRes.signedTxXdr;
       } catch (err: any) {
         throw new Error(err.message || "User cancelled signing or Freighter error.");
       }
