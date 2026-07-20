@@ -22,12 +22,26 @@ export const useUIStore = create<UIState>()(
   ),
 );
 
+export type ConnectionStatus = "disconnected" | "connecting" | "connected";
+export type AuthStatus = "idle" | "verifying" | "authenticated" | "failed";
+
 interface SessionState {
   walletAddress: string | null;
   userId: string | null;
   accessToken: string | null;
+  /** Pre-auth wallet connection state (set immediately after requestAccess). */
+  connectionStatus: ConnectionStatus;
+  /** Authentication lifecycle state. */
+  authStatus: AuthStatus;
+  /** Last authentication error message, if any. */
+  authError: string | null;
+  setWalletAddress: (address: string) => void;
+  setConnectionStatus: (status: ConnectionStatus) => void;
+  setAuthStatus: (status: AuthStatus, error?: string | null) => void;
   setSession: (session: AuthSession) => void;
   clearSession: () => void;
+  /** Reset connection + auth without clearing the session (for retry). */
+  resetAuth: () => void;
 }
 
 export const useSessionStore = create<SessionState>()(
@@ -36,13 +50,36 @@ export const useSessionStore = create<SessionState>()(
       walletAddress: null,
       userId: null,
       accessToken: null,
+      connectionStatus: "disconnected",
+      authStatus: "idle",
+      authError: null,
+      setWalletAddress: (address) => set({ walletAddress: address }),
+      setConnectionStatus: (status) => set({ connectionStatus: status }),
+      setAuthStatus: (status, error = null) => set({ authStatus: status, authError: error }),
       setSession: (session) =>
         set({
           walletAddress: session.user.walletAddress,
           userId: session.user.id,
           accessToken: session.accessToken,
+          connectionStatus: "connected",
+          authStatus: "authenticated",
+          authError: null,
         }),
-      clearSession: () => set({ walletAddress: null, userId: null, accessToken: null }),
+      clearSession: () =>
+        set({
+          walletAddress: null,
+          userId: null,
+          accessToken: null,
+          connectionStatus: "disconnected",
+          authStatus: "idle",
+          authError: null,
+        }),
+      resetAuth: () =>
+        set({
+          connectionStatus: "disconnected",
+          authStatus: "idle",
+          authError: null,
+        }),
     }),
     { name: "pactos-session" },
   ),

@@ -6,6 +6,7 @@ import {
   useRouter,
   HeadContent,
   Scripts,
+  Script,
 } from "@tanstack/react-router";
 import { useEffect, type ReactNode } from "react";
 
@@ -77,6 +78,7 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
 
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
   head: () => ({
+    
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
@@ -137,6 +139,15 @@ function RootShell({ children }: { children: ReactNode }) {
     <html lang="en" className="dark">
       <head>
         <HeadContent />
+        <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-6WYG9B4718"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-6WYG9B4718');
+</script>
       </head>
       <body>
         {children}
