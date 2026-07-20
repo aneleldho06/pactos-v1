@@ -15,8 +15,10 @@
 [![License](https://img.shields.io/badge/License-MIT-blue?style=flat-square)](LICENSE)
 [![Status](https://img.shields.io/badge/Status-Alpha-orange?style=flat-square)](#-current-status)
 
-</div>
 <img width="500" height="500" alt="pactOS_bg_remove" src="https://github.com/user-attachments/assets/7f044b13-5582-4797-a8d9-64167a0b5314" />
+</div>
+
+
 ## 🚨 The Problem
 
 Traditional financial agreements rely on trust, intermediaries, and manual enforcement. Whether it's a freelancer payment schedule, a revenue-sharing arrangement, or a multi-party escrow — the execution of financial terms is disconnected from the terms themselves.
